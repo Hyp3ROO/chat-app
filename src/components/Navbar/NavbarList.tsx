@@ -13,12 +13,16 @@ import Button from './Button'
 
 const animationVariantsUl = {
   open: {
+    display: 'flex',
     opacity: 1,
     x: 0,
   },
   closed: {
     opacity: 0,
     x: '100%',
+    transitionEnd: {
+      display: 'none',
+    },
   },
 }
 
@@ -60,9 +64,7 @@ const NavbarList = () => {
         animate={navbarListIsOpen ? 'open' : 'closed'}
         variants={animationVariantsUl}
         transition={{ duration: 0.3 }}
-        className={`${
-          navbarListIsOpen ? 'flex' : 'hidden'
-        } absolute right-2 top-[4.5rem] flex-col items-center justify-around gap-2 overflow-hidden rounded-lg bg-secondary p-4 font-bold md:top-24 md:gap-4 md:p-6`}>
+        className='hidden absolute right-2 top-[4.5rem] flex-col items-center justify-around gap-2 overflow-hidden rounded-lg bg-secondary p-4 font-bold md:top-24 md:gap-4 md:p-6'>
         {currentUser?.photoURL && (
           <Link to='/profile'>
             <NavbarListItem
