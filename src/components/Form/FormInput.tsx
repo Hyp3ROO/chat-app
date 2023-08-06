@@ -1,8 +1,7 @@
 const FormInput = ({ ...rest }) => {
   return (
     <input
-      className='border-b-4 bg-transparent p-4 outline-none transition-colors focus:border-secondary'
-      autoComplete='off'
+      className='placeholder-white/70 text-sm md:text-base p-3.5 rounded-lg bg-secondary/40'
       required
       {...rest}
     />

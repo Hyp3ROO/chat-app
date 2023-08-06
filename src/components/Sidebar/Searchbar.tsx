@@ -13,6 +13,7 @@ import { useContext, useState } from 'react'
 import { db } from '../../auth/firebase'
 import { AuthContext } from '../../context/AuthContext'
 import { toast } from 'react-hot-toast'
+import { BsSearch } from 'react-icons/bs'
 import Chat from './Chat'
 
 type User = {
@@ -91,9 +92,12 @@ const Searchbar = () => {
 
   return (
     <>
-      <form className='flex w-full px-6 py-4 md:py-6' onSubmit={handleSearch}>
+      <form
+        className='relative flex items-center bg-primary rounded-lg mx-6 my-4 p-2'
+        onSubmit={handleSearch}>
+        <BsSearch className='text-2xl absolute left-4' />
         <input
-          className='w-full border-b bg-transparent p-1.5 outline-none duration-300 focus:border-secondary md:border-b-2 md:text-xl'
+          className='w-full bg-transparent h-full md:text-lg ml-12 p-2 md:p-3 rounded-lg placeholder-white/70'
           type='text'
           value={username}
           onChange={e => setUsername(e.target.value)}
