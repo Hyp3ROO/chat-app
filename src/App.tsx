@@ -24,6 +24,7 @@ const App = () => {
   return (
     <div className='relative min-h-screen overflow-hidden bg-primary text-white'>
       <Routes>
+        <Route path='*' element={<Navigate to='/' />} />
         <Route
           path='/'
           element={
