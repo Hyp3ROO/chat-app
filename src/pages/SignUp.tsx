@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { hasWhiteSpace } from '../utils/hasWhiteSpace'
 import { auth, db, storage } from '../auth/firebase'
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { doc, setDoc } from 'firebase/firestore'
@@ -28,6 +29,12 @@ const SignUp = () => {
     e.preventDefault()
     if (!image) {
       toast.error('You need to add an image!')
+      return
+    }
+    if (hasWhiteSpace(form.email) || hasWhiteSpace(form.password)) {
+      toast.error(
+        'Error: No whitespace characters can be used in an email or password'
+      )
       return
     }
     const toastLoading = toast.loading('Creating an account...')
