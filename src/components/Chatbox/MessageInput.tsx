@@ -13,10 +13,27 @@ import { ChatContext } from '../../context/ChatContext'
 import { AuthContext } from '../../context/AuthContext'
 import { toast } from 'react-hot-toast'
 import imageCompression from 'browser-image-compression'
-import { FcAddImage } from 'react-icons/fc'
-import { BsFillSendFill } from 'react-icons/bs'
+import { AiOutlineClose } from 'react-icons/ai'
+import MessageImage from './MessageImage'
+import ImagePicker from './ImagePicker'
 
-const MessageInput = () => {
+type MessageInputProps = {
+  messageToReply: {
+    text: string
+    isImage: boolean
+  }
+  setMessageToReply: (messageToReply: {
+    text: string
+    isImage: boolean
+  }) => void
+  messageInputRef: React.MutableRefObject<HTMLInputElement | null>
+}
+
+const MessageInput = ({
+  messageToReply,
+  setMessageToReply,
+  messageInputRef,
+}: MessageInputProps) => {
   const [text, setText] = useState('')
   const [image, setImage] = useState<File | null>(null)
   const [isImageAdding, setIsImageAdding] = useState(false)
@@ -71,6 +88,8 @@ const MessageInput = () => {
                 senderId: currentUser?.uid,
                 date: Timestamp.now(),
                 image: downloadURL,
+                messageToReply: messageToReply.text,
+                isReplyImage: messageToReply.isImage,
               }),
             })
           })
@@ -83,6 +102,8 @@ const MessageInput = () => {
           text,
           senderId: currentUser?.uid,
           date: Timestamp.now(),
+          messageToReply: messageToReply.text,
+          isReplyImage: messageToReply.isImage,
         }),
       })
     }
@@ -103,52 +124,50 @@ const MessageInput = () => {
     })
     setText('')
     setImage(null)
+    setMessageToReply({ text: '', isImage: false })
   }
 
   return (
-    <div className='fixed bottom-0 w-full bg-primary-bg md:static'>
+    <div className='fixed bottom-0 flex flex-col justify-center w-full h-24 bg-primary-bg md:static z-20'>
+      {messageToReply.text !== '' && (
+        <div className='flex items-center justify-between gap-12 absolute bottom-24 w-full md:w-2/3 bg-primary-bg/90 p-3 z-20'>
+          <span className='flex items-center gap-4 text-sm md:text-base truncate'>
+            Reply to:{' '}
+            {messageToReply.isImage ? (
+              <MessageImage
+                image={messageToReply.text}
+                className='rounded-lg w-20'
+              />
+            ) : (
+              messageToReply.text
+            )}
+          </span>
+          <button
+            className='group p-2'
+            onClick={() => setMessageToReply({ text: '', isImage: false })}>
+            <AiOutlineClose className='text-xl group-hover:text-hover transition-colors shrink-0' />
+          </button>
+        </div>
+      )}
       <form
-        className='flex h-24 items-center justify-center gap-4 px-6 py-4 md:py-6'
+        className='relative flex items-center self-center w-[95%] md:w-[98%] bg-primary rounded-lg'
         onSubmit={handleSend}>
         <input
           className={`${
             isImageAdding ? 'placeholder-gray-400' : 'placeholder-white/70'
-          } w-full border-b bg-transparent p-1.5 outline-none duration-300 focus:border-secondary md:border-b-2 md:text-xl`}
+          } w-full mr-14 md:mr-16 text-sm p-3.5 bg-transparent md:text-lg rounded-lg`}
           type='text'
           disabled={isImageAdding ? true : false}
           value={text}
           onChange={e => setText(e.target.value)}
           placeholder={isImageAdding ? 'Adding Image...' : 'Type Message...'}
+          ref={messageInputRef}
         />
-        <button
-          type='submit'
-          disabled={isImageAdding ? true : false}
-          className={`${
-            isImageAdding
-              ? 'bg-gray-400 focus:bg-gray-600'
-              : 'bg-secondary focus:bg-secondary-bg'
-          } rounded-lg p-2 font-bold transition-colors hover:bg-hover md:p-3`}>
-          <BsFillSendFill className='text-xl md:text-2xl' />
-        </button>
-        <input
-          type='file'
-          id='image'
-          name='image'
-          className='hidden'
-          accept='image/*'
-          onChange={handleImageChange}
+        <ImagePicker
+          image={image}
+          handleImageChange={handleImageChange}
+          isImageAdding={isImageAdding}
         />
-        <label
-          htmlFor='image'
-          className='group flex cursor-pointer flex-col items-center'>
-          <FcAddImage className='text-3xl transition-transform group-hover:scale-105 md:text-4xl' />
-          {image && (
-            <span className='text-xs text-green-500 md:text-sm'>Added</span>
-          )}
-          {isImageAdding && (
-            <span className='text-xs text-gray-400 md:text-sm'>Adding...</span>
-          )}
-        </label>
       </form>
     </div>
   )

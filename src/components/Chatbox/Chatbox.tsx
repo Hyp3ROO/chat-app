@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { ChatContext } from '../../context/ChatContext'
 import { AuthContext } from '../../context/AuthContext'
 import MessageInput from './MessageInput'
@@ -7,6 +7,16 @@ import Messages from './Messages'
 const Chatbox = () => {
   const { currentUser } = useContext(AuthContext)
   const { state, dispatch } = useContext(ChatContext)
+  const messageInputRef = useRef<HTMLInputElement | null>(null)
+  const [messageToReply, setMessageToReply] = useState({
+    text: '',
+    isImage: false,
+  })
+
+  const handleReplyClick = (text: string, isImage: boolean) => {
+    setMessageToReply({ text, isImage })
+    messageInputRef.current?.focus()
+  }
 
   useEffect(() => {
     dispatch({
@@ -23,7 +33,7 @@ const Chatbox = () => {
     <div className='w-full md:max-h-screen md:w-2/3'>
       {state.user.uid !== '' ? (
         <>
-          <div className='fixed top-[4.5rem] z-10 flex h-12 w-full items-center justify-center gap-4 bg-primary-bg/80 p-8 md:static md:top-20 md:h-24 md:justify-start'>
+          <div className='fixed top-[4.5rem] z-30 flex h-12 w-full items-center justify-center gap-4 bg-primary-bg/80 p-8 md:static md:top-20 md:h-24 md:justify-start'>
             {state.user.photoURL && (
               <img
                 src={state.user?.photoURL}
@@ -33,8 +43,12 @@ const Chatbox = () => {
             )}
             <span className='text-xl font-bold'>{state.user?.displayName}</span>
           </div>
-          <Messages />
-          <MessageInput />
+          <Messages handleReplyClick={handleReplyClick} />
+          <MessageInput
+            messageToReply={messageToReply}
+            setMessageToReply={setMessageToReply}
+            messageInputRef={messageInputRef}
+          />
         </>
       ) : (
         <div className='flex h-screen items-center justify-center text-center'>
