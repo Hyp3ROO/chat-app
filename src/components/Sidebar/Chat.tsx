@@ -1,17 +1,40 @@
 import { useContext } from 'react'
 import { AuthContext } from '../../context/AuthContext'
+import { ChatContext } from '../../context/ChatContext'
+
+type User = {
+  displayName: string
+  photoURL: string
+  uid: string
+}
 
 type ChatProps = {
   photoURL: string
   displayName: string
   lastMessage?: string
   senderId?: string
+  user: User
 }
 
-const Chat = ({ photoURL, displayName, lastMessage, senderId }: ChatProps) => {
+const Chat = ({
+  photoURL,
+  displayName,
+  lastMessage,
+  senderId,
+  user,
+}: ChatProps) => {
   const { currentUser } = useContext(AuthContext)
+  const { dispatch, setChatsIsOpen } = useContext(ChatContext)
+
+  const handleSelect = (user: User) => {
+    dispatch({ type: 'CHANGE_USER', payload: user })
+    setChatsIsOpen(false)
+  }
+
   return (
-    <li className='flex cursor-pointer items-center gap-6 px-8 py-4 transition-colors duration-300 hover:bg-primary/80'>
+    <button
+      className='flex w-full cursor-pointer items-center text-left gap-6 px-8 py-4 transition-colors duration-300 hover:bg-primary/80'
+      onClick={() => handleSelect(user)}>
       {photoURL && (
         <>
           <img
@@ -29,7 +52,7 @@ const Chat = ({ photoURL, displayName, lastMessage, senderId }: ChatProps) => {
           </div>
         </>
       )}
-    </li>
+    </button>
   )
 }
 export default Chat
