@@ -2,7 +2,7 @@ import type { MessageType } from '../../types/types'
 import { useContext, useEffect, useState } from 'react'
 import { ChatContext } from '../../context/ChatContext'
 import { doc, onSnapshot } from 'firebase/firestore'
-import { db } from '../../auth/firebase'
+import { db } from '../../firebase/config'
 import Message from './Message'
 
 type MessagesProps = {

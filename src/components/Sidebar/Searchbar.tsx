@@ -10,7 +10,7 @@ import {
   where,
 } from 'firebase/firestore'
 import { useContext, useState } from 'react'
-import { db } from '../../auth/firebase'
+import { db } from '../../firebase/config'
 import { AuthContext } from '../../context/AuthContext'
 import { toast } from 'react-hot-toast'
 import { BsSearch } from 'react-icons/bs'

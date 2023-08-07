@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import toast from 'react-hot-toast'
 import { hasWhiteSpace } from '../utils/hasWhiteSpace'
-import { auth } from '../auth/firebase'
+import { auth } from '../firebase/config'
 import FormInput from '../components/Form/FormInput'
 
 const SignIn = () => {

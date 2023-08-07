@@ -6,7 +6,7 @@ import {
   serverTimestamp,
   updateDoc,
 } from 'firebase/firestore'
-import { db, storage } from '../../auth/firebase'
+import { db, storage } from '../../firebase/config'
 import { v4 as uuid } from 'uuid'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { ChatContext } from '../../context/ChatContext'

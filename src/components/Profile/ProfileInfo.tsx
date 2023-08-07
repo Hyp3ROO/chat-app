@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../context/AuthContext'
-import { storage } from '../../auth/firebase'
+import { storage } from '../../firebase/config'
 import toast from 'react-hot-toast'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import imageCompression from 'browser-image-compression'
