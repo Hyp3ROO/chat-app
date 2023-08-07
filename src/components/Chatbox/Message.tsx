@@ -3,9 +3,9 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { AuthContext } from '../../context/AuthContext'
 import { useMediaQuery } from 'react-responsive'
 import { formatDate } from '../../utils/formatDate'
-import { BsFillReplyFill } from 'react-icons/bs'
 import MessageImage from './MessageImage'
 import MessageReply from './MessageReply'
+import ReplyButton from './ReplyButton'
 
 type MessageProps = {
   message: MessageType
@@ -59,13 +59,12 @@ const Message = ({ message, handleReplyClick }: MessageProps) => {
                 </span>
               </div>
               {message.senderId !== currentUser?.uid && (
-                <button
-                  className={`${
-                    showReplyButton ? 'opacity-100' : 'opacity-0'
-                  } p-1 font-bold transition-opacity md:p-2 group`}
-                  onClick={() => handleReplyClick(message.text, false)}>
-                  <BsFillReplyFill className='text-xl md:text-2xl group-hover:text-hover' />
-                </button>
+                <ReplyButton
+                  showReplyButton={showReplyButton}
+                  replyTo={message.text}
+                  handleReplyClick={handleReplyClick}
+                  isImage={false}
+                />
               )}
             </div>
           </div>
@@ -85,13 +84,12 @@ const Message = ({ message, handleReplyClick }: MessageProps) => {
                 height={isMobile ? 100 : 200}
               />
               {message.senderId !== currentUser?.uid && (
-                <button
-                  className={`${
-                    showReplyButton ? 'opacity-100' : 'opacity-0'
-                  } p-1 font-bold transition-opacity md:p-2 group`}
-                  onClick={() => handleReplyClick(message.image, true)}>
-                  <BsFillReplyFill className='text-xl md:text-2xl group-hover:text-hover' />
-                </button>
+                <ReplyButton
+                  showReplyButton={showReplyButton}
+                  replyTo={message.image}
+                  handleReplyClick={handleReplyClick}
+                  isImage={true}
+                />
               )}
             </div>
           </div>
