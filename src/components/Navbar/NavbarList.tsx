@@ -1,10 +1,10 @@
 import { Turn as Hamburger } from 'hamburger-react'
 import { motion } from 'framer-motion'
-import { useContext, useEffect, useRef, useState } from 'react'
-import { AuthContext } from '../../context/AuthContext'
+import { useEffect, useRef, useState } from 'react'
+import useChatContext from '../../hooks/useChatContext'
+import useAuthContext from '../../hooks/useAuthContext'
 import { auth } from '../../firebase/config'
 import { signOut } from 'firebase/auth'
-import { ChatContext } from '../../context/ChatContext'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { TbLogout } from 'react-icons/tb'
 import { HiChatBubbleLeftRight } from 'react-icons/hi2'
@@ -29,8 +29,8 @@ const animationVariantsUl = {
 const NavbarList = () => {
   const [navbarListIsOpen, setNavbarListIsOpen] = useState(false)
   const navbarListRef = useRef<HTMLDivElement | null>(null)
-  const { currentUser } = useContext(AuthContext)
-  const { chatsIsOpen, setChatsIsOpen } = useContext(ChatContext)
+  const { currentUser } = useAuthContext()
+  const { chatsIsOpen, setChatsIsOpen } = useChatContext()
   const location = useLocation()
   const navigate = useNavigate()
 

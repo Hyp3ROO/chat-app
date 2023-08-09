@@ -1,6 +1,6 @@
 import type { MessageType } from '../../types/types'
-import { useContext, useEffect, useRef, useState } from 'react'
-import { AuthContext } from '../../context/AuthContext'
+import { useEffect, useRef, useState } from 'react'
+import useAuthContext from '../../hooks/useAuthContext'
 import { useMediaQuery } from 'react-responsive'
 import { formatDate } from '../../utils/formatDate'
 import MessageImage from './MessageImage'
@@ -13,7 +13,7 @@ type MessageProps = {
 }
 
 const Message = ({ message, handleReplyClick }: MessageProps) => {
-  const { currentUser } = useContext(AuthContext)
+  const { currentUser } = useAuthContext()
   const [showReplyButton, setShowReplyButton] = useState(false)
   const isCurrentUser = message.senderId === currentUser?.uid
   const scrollToRef = useRef<HTMLDivElement | null>(null)

@@ -1,5 +1,4 @@
-import { useContext, useState } from 'react'
-import { AuthContext } from '../../context/AuthContext'
+import { useState } from 'react'
 import { storage } from '../../firebase/config'
 import toast from 'react-hot-toast'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
@@ -7,9 +6,10 @@ import imageCompression from 'browser-image-compression'
 import { updateProfileInfo } from '../../utils/updateProfileInfo'
 import { AiOutlineCamera } from 'react-icons/ai'
 import FormInput from '../../components/Form/FormInput'
+import useAuthContext from '../../hooks/useAuthContext'
 
 const ProfileInfo = () => {
-  const { currentUser } = useContext(AuthContext)
+  const { currentUser } = useAuthContext()
   const [newUsername, setNewUsername] = useState('')
   const [, setImageChanged] = useState(false)
 

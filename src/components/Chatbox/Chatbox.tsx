@@ -1,12 +1,12 @@
-import { useContext, useEffect, useRef, useState } from 'react'
-import { ChatContext } from '../../context/ChatContext'
-import { AuthContext } from '../../context/AuthContext'
+import { useEffect, useRef, useState } from 'react'
+import useAuthContext from '../../hooks/useAuthContext'
+import useChatContext from '../../hooks/useChatContext'
 import MessageInput from './MessageInput'
 import Messages from './Messages'
 
 const Chatbox = () => {
-  const { currentUser } = useContext(AuthContext)
-  const { state, dispatch } = useContext(ChatContext)
+  const { currentUser } = useAuthContext()
+  const { state, dispatch } = useChatContext()
   const messageInputRef = useRef<HTMLInputElement | null>(null)
   const [messageToReply, setMessageToReply] = useState({
     text: '',

@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import useAuthContext from '../../hooks/useAuthContext'
+import useChatContext from '../../hooks/useChatContext'
 import { doc, onSnapshot } from 'firebase/firestore'
 import { db } from '../../firebase/config'
-import { AuthContext } from '../../context/AuthContext'
-import { ChatContext } from '../../context/ChatContext'
 import Chat from './Chat'
 import Searchbar from './Searchbar'
 
@@ -22,8 +22,8 @@ type Chats = {
 
 const Chats = () => {
   const [chats, setChats] = useState<Chats[]>([])
-  const { currentUser } = useContext(AuthContext)
-  const { chatsIsOpen } = useContext(ChatContext)
+  const { currentUser } = useAuthContext()
+  const { chatsIsOpen } = useChatContext()
 
   const chatsSorted = Object.entries(chats)
     .sort((a, b) => b[1].date - a[1].date)

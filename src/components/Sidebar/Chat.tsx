@@ -1,6 +1,5 @@
-import { useContext } from 'react'
-import { AuthContext } from '../../context/AuthContext'
-import { ChatContext } from '../../context/ChatContext'
+import useAuthContext from '../../hooks/useAuthContext'
+import useChatContext from '../../hooks/useChatContext'
 
 type User = {
   displayName: string
@@ -23,8 +22,8 @@ const Chat = ({
   senderId,
   user,
 }: ChatProps) => {
-  const { currentUser } = useContext(AuthContext)
-  const { dispatch, setChatsIsOpen } = useContext(ChatContext)
+  const { currentUser } = useAuthContext()
+  const { dispatch, setChatsIsOpen } = useChatContext()
 
   const handleSelect = (user: User) => {
     dispatch({ type: 'CHANGE_USER', payload: user })

@@ -9,9 +9,9 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
+import useAuthContext from '../../hooks/useAuthContext'
 import { db } from '../../firebase/config'
-import { AuthContext } from '../../context/AuthContext'
 import { toast } from 'react-hot-toast'
 import { BsSearch } from 'react-icons/bs'
 import Chat from './Chat'
@@ -26,7 +26,7 @@ type User = {
 const Searchbar = () => {
   const [username, setUsername] = useState('')
   const [user, setUser] = useState<User | null>(null)
-  const { currentUser } = useContext(AuthContext)
+  const { currentUser } = useAuthContext()
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -106,7 +106,11 @@ const Searchbar = () => {
       </form>
       {user && (
         <div className='border-b-4 border-secondary' onClick={handleSelect}>
-          <Chat photoURL={user.photoURL} displayName={user.displayName} />
+          <Chat
+            photoURL={user.photoURL}
+            displayName={user.displayName}
+            user={user}
+          />
         </div>
       )}
     </>

@@ -1,4 +1,6 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
+import useChatContext from '../../hooks/useChatContext'
+import useAuthContext from '../../hooks/useAuthContext'
 import {
   Timestamp,
   arrayUnion,
@@ -9,8 +11,6 @@ import {
 import { db, storage } from '../../firebase/config'
 import { v4 as uuid } from 'uuid'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
-import { ChatContext } from '../../context/ChatContext'
-import { AuthContext } from '../../context/AuthContext'
 import { hasWhiteSpace } from '../../utils/hasWhiteSpace'
 import { toast } from 'react-hot-toast'
 import imageCompression from 'browser-image-compression'
@@ -38,8 +38,8 @@ const MessageInput = ({
   const [text, setText] = useState('')
   const [image, setImage] = useState<File | null>(null)
   const [isImageAdding, setIsImageAdding] = useState(false)
-  const { state } = useContext(ChatContext)
-  const { currentUser } = useContext(AuthContext)
+  const { state } = useChatContext()
+  const { currentUser } = useAuthContext()
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsImageAdding(true)

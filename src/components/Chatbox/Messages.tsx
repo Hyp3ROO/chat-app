@@ -1,6 +1,6 @@
 import type { MessageType } from '../../types/types'
-import { useContext, useEffect, useState } from 'react'
-import { ChatContext } from '../../context/ChatContext'
+import { useEffect, useState } from 'react'
+import useChatContext from '../../hooks/useChatContext'
 import { doc, onSnapshot } from 'firebase/firestore'
 import { db } from '../../firebase/config'
 import Message from './Message'
@@ -11,7 +11,7 @@ type MessagesProps = {
 
 const Messages = ({ handleReplyClick }: MessagesProps) => {
   const [messages, setMessages] = useState<MessageType[]>([])
-  const { state } = useContext(ChatContext)
+  const { state } = useChatContext()
 
   useEffect(() => {
     const chatId = state?.chatId || ''
