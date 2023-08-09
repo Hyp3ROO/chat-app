@@ -93,16 +93,20 @@ const Searchbar = () => {
   return (
     <>
       <form
-        className='relative flex items-center bg-primary rounded-lg mx-6 my-4 p-2'
+        className='flex items-center w-full rounded-lg py-6 px-6'
         onSubmit={handleSearch}>
-        <BsSearch className='text-2xl absolute left-4' />
-        <input
-          className='w-full bg-transparent h-full md:text-lg ml-12 p-2 md:p-3 rounded-lg placeholder-white/70'
-          type='text'
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          placeholder='Find a user...'
-        />
+        <div className='relative w-full'>
+          <div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
+            <BsSearch className='text-2xl' />
+          </div>
+          <input
+            className='w-full h-full md:text-lg pl-12 p-3 md:p-4 md:pl-12 rounded-lg bg-primary placeholder-white/70'
+            type='text'
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            placeholder='Find a user...'
+          />
+        </div>
       </form>
       {user && (
         <div className='border-b-4 border-secondary' onClick={handleSelect}>

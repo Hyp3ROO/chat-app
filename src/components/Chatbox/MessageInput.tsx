@@ -154,7 +154,7 @@ const MessageInput = ({
           </button>
         </div>
       )}
-      <form
+      {/* <form
         className='relative flex items-center self-center w-[95%] md:w-[98%] bg-primary rounded-lg'
         onSubmit={handleSend}>
         <input
@@ -173,6 +173,30 @@ const MessageInput = ({
           handleImageChange={handleImageChange}
           isImageAdding={isImageAdding}
         />
+      </form> */}
+      <form
+        className='flex items-center self-center w-full px-4'
+        onSubmit={handleSend}>
+        <div className='relative w-full'>
+          <input
+            className={`${
+              isImageAdding ? 'placeholder-gray-400' : 'placeholder-white/70'
+            } w-full text-sm p-3.5 bg-primary md:text-lg rounded-lg`}
+            type='text'
+            disabled={isImageAdding ? true : false}
+            value={text}
+            onChange={e => setText(e.target.value)}
+            placeholder={isImageAdding ? 'Adding Image...' : 'Type Message...'}
+            ref={messageInputRef}
+          />
+          <div className='absolute inset-y-0 right-0 flex items-center pl-3'>
+            <ImagePicker
+              image={image}
+              handleImageChange={handleImageChange}
+              isImageAdding={isImageAdding}
+            />
+          </div>
+        </div>
       </form>
     </div>
   )
