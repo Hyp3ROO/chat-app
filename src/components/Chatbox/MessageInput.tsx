@@ -11,6 +11,7 @@ import { v4 as uuid } from 'uuid'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { ChatContext } from '../../context/ChatContext'
 import { AuthContext } from '../../context/AuthContext'
+import { hasWhiteSpace } from '../../utils/hasWhiteSpace'
 import { toast } from 'react-hot-toast'
 import imageCompression from 'browser-image-compression'
 import { AiOutlineClose } from 'react-icons/ai'
@@ -68,6 +69,10 @@ const MessageInput = ({
 
     if (text === '' && !image) {
       toast.error('You need to type something or select some image!')
+      return
+    } else if (hasWhiteSpace(text)) {
+      toast.error('You cannot use whitespace characters!')
+      setText('')
       return
     }
     if (image) {

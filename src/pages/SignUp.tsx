@@ -31,9 +31,13 @@ const SignUp = () => {
       toast.error('You need to add an image!')
       return
     }
-    if (hasWhiteSpace(form.email) || hasWhiteSpace(form.password)) {
+    if (
+      hasWhiteSpace(form.displayName) ||
+      hasWhiteSpace(form.email) ||
+      hasWhiteSpace(form.password)
+    ) {
       toast.error(
-        'Error: No whitespace characters can be used in an email or password'
+        'No whitespace characters can be used in an email or password'
       )
       return
     }
