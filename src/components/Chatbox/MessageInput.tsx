@@ -11,7 +11,6 @@ import {
 import { db, storage } from '../../firebase/config'
 import { v4 as uuid } from 'uuid'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
-import { hasWhiteSpace } from '../../utils/hasWhiteSpace'
 import { toast } from 'react-hot-toast'
 import imageCompression from 'browser-image-compression'
 import { AiOutlineClose } from 'react-icons/ai'
@@ -70,7 +69,7 @@ const MessageInput = ({
     if (text === '' && !image) {
       toast.error('You need to type something or select some image!')
       return
-    } else if (hasWhiteSpace(text)) {
+    } else if (!text.replace(/\s/g, '').length) {
       toast.error('You cannot use whitespace characters!')
       setText('')
       return
@@ -154,26 +153,6 @@ const MessageInput = ({
           </button>
         </div>
       )}
-      {/* <form
-        className='relative flex items-center self-center w-[95%] md:w-[98%] bg-primary rounded-lg'
-        onSubmit={handleSend}>
-        <input
-          className={`${
-            isImageAdding ? 'placeholder-gray-400' : 'placeholder-white/70'
-          } w-full mr-14 md:mr-16 text-sm p-3.5 bg-transparent md:text-lg rounded-lg`}
-          type='text'
-          disabled={isImageAdding ? true : false}
-          value={text}
-          onChange={e => setText(e.target.value)}
-          placeholder={isImageAdding ? 'Adding Image...' : 'Type Message...'}
-          ref={messageInputRef}
-        />
-        <ImagePicker
-          image={image}
-          handleImageChange={handleImageChange}
-          isImageAdding={isImageAdding}
-        />
-      </form> */}
       <form
         className='flex items-center self-center w-full px-4'
         onSubmit={handleSend}>
