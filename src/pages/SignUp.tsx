@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import { hasWhiteSpace } from '../utils/hasWhiteSpace'
 import { auth, db, storage } from '../firebase/config'
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { doc, setDoc } from 'firebase/firestore'
@@ -21,7 +20,7 @@ const SignUp = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm(prev => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value.trim(),
     }))
   }
 
@@ -29,16 +28,6 @@ const SignUp = () => {
     e.preventDefault()
     if (!image) {
       toast.error('You need to add an image!')
-      return
-    }
-    if (
-      hasWhiteSpace(form.displayName) ||
-      hasWhiteSpace(form.email) ||
-      hasWhiteSpace(form.password)
-    ) {
-      toast.error(
-        'No whitespace characters can be used in an email or password'
-      )
       return
     }
     const toastLoading = toast.loading('Creating an account...')
@@ -53,8 +42,8 @@ const SignUp = () => {
       uploadTask.on(
         'state_changed',
         null,
-        error => {
-          toast.error(`Error occured: ${error}`)
+        () => {
+          toast.error('An error occurred while adding an image')
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async downloadURL => {
@@ -79,7 +68,7 @@ const SignUp = () => {
         }
       )
     } catch (error) {
-      toast.error(`Error occured: ${error}`)
+      toast.error('Invalid email or password!')
       toast.dismiss(toastLoading)
     }
   }

@@ -4,7 +4,7 @@ type ButtonProps = {
   onClick: () => void
 }
 
-const Button = ({ icon, text, onClick }: ButtonProps) => {
+const NavbarButton = ({ icon, text, onClick }: ButtonProps) => {
   return (
     <button
       className='group flex items-center gap-2 p-2 transition-colors hover:text-hover'
@@ -14,4 +14,4 @@ const Button = ({ icon, text, onClick }: ButtonProps) => {
     </button>
   )
 }
-export default Button
+export default NavbarButton

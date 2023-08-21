@@ -39,7 +39,7 @@ const ProfileInfo = () => {
       toast.dismiss(toastLoading)
       setNewUsername('')
     } catch (error) {
-      toast.error(`Error occured: ${error}`)
+      toast.error('An error occurred while updating the profile')
       toast.dismiss(toastLoading)
     }
   }
@@ -71,8 +71,8 @@ const ProfileInfo = () => {
           uploadTask.on(
             'state_changed',
             null,
-            (error: unknown) => {
-              toast.error(`Error occured: ${error}`)
+            () => {
+              toast.error('An error occurred while changing an image')
             },
             () => {
               getDownloadURL(uploadTask.snapshot.ref).then(
@@ -92,12 +92,12 @@ const ProfileInfo = () => {
             }
           )
         } catch (error) {
-          toast.error(`Error occured: ${error}`)
+          toast.error('An error occurred while changing an image')
           toast.dismiss(toastLoading)
         }
       }
     } catch (error) {
-      toast.error(`Error occured: ${error}`)
+      toast.error('An error occurred while changing an image')
       toast.dismiss(toastLoading)
     }
   }

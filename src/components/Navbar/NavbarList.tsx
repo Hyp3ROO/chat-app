@@ -9,7 +9,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { TbLogout } from 'react-icons/tb'
 import { HiChatBubbleLeftRight } from 'react-icons/hi2'
 import NavbarListItem from './NavbarListItem'
-import Button from './Button'
+import NavbarButton from './NavbarButton'
 
 const animationVariantsUl = {
   open: {
@@ -81,7 +81,7 @@ const NavbarList = () => {
         )}
         {location.pathname === '/profile' ? (
           <NavbarListItem navbarListIsOpen={navbarListIsOpen}>
-            <Button
+            <NavbarButton
               onClick={() => navigate('/')}
               icon={<HiChatBubbleLeftRight className='text-3xl' />}
               text='Back To Chat'
@@ -91,7 +91,7 @@ const NavbarList = () => {
           <NavbarListItem
             styles='md:hidden'
             navbarListIsOpen={navbarListIsOpen}>
-            <Button
+            <NavbarButton
               onClick={() => {
                 setChatsIsOpen(false)
                 setNavbarListIsOpen(false)
@@ -104,7 +104,7 @@ const NavbarList = () => {
           <NavbarListItem
             styles='md:hidden'
             navbarListIsOpen={navbarListIsOpen}>
-            <Button
+            <NavbarButton
               onClick={() => {
                 setChatsIsOpen(true)
                 setNavbarListIsOpen(false)
@@ -115,7 +115,7 @@ const NavbarList = () => {
           </NavbarListItem>
         )}
         <NavbarListItem navbarListIsOpen={navbarListIsOpen}>
-          <Button
+          <NavbarButton
             onClick={() => signOut(auth)}
             icon={<TbLogout className='text-3xl' />}
             text='Logout'

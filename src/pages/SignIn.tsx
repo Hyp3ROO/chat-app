@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import toast from 'react-hot-toast'
-import { hasWhiteSpace } from '../utils/hasWhiteSpace'
 import { auth } from '../firebase/config'
 import FormInput from '../components/Form/FormInput'
 
@@ -16,18 +15,12 @@ const SignIn = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm(prev => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value.trim(),
     }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (hasWhiteSpace(form.email) || hasWhiteSpace(form.password)) {
-      toast.error(
-        'Error: No whitespace characters can be used in an email or password'
-      )
-      return
-    }
     const toastLoading = toast.loading('Signing in...')
     try {
       await signInWithEmailAndPassword(auth, form.email, form.password)
@@ -35,7 +28,7 @@ const SignIn = () => {
       toast.dismiss(toastLoading)
       navigate('/')
     } catch (error) {
-      toast.error('Error: ' + error)
+      toast.error('Invalid email or password!')
       toast.dismiss(toastLoading)
     }
   }

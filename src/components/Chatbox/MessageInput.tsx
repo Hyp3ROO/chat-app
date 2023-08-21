@@ -55,7 +55,7 @@ const MessageInput = ({
         setImage(compressedImageFile)
       }
     } catch (error) {
-      toast.error(`Error occured: ${error}`)
+      toast.error('An error occurred while adding an image')
     }
     e.target.value = ''
     setIsImageAdding(false)
@@ -66,12 +66,8 @@ const MessageInput = ({
     const chatId = state?.chatId || ''
     const currentUserUID = currentUser?.uid || ''
 
-    if (text === '' && !image) {
+    if (text.trim() === '' && !image) {
       toast.error('You need to type something or select some image!')
-      return
-    } else if (!text.replace(/\s/g, '').length) {
-      toast.error('You cannot use whitespace characters!')
-      setText('')
       return
     }
     if (image) {
@@ -80,8 +76,8 @@ const MessageInput = ({
       uploadTask.on(
         'state_changed',
         null,
-        error => {
-          toast.error(`Error occured: ${error}`)
+        () => {
+          toast.error('An error occurred while adding an image')
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async downloadURL => {

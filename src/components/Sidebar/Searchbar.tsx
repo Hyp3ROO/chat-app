@@ -44,7 +44,7 @@ const Searchbar = () => {
         toast.error(`${username} not found`)
       }
     } catch (error) {
-      toast.error(`Error occured: ${error}`)
+      toast.error('An error occurred while searching for a user')
     }
   }
 
@@ -83,7 +83,7 @@ const Searchbar = () => {
         toast.success(`Added ${user.displayName} to your chats`)
       }
     } catch (error) {
-      toast.error(`Error occured: ${error}`)
+      toast.error('An error occured while selecting a user')
     }
 
     setUser(null)
@@ -103,7 +103,7 @@ const Searchbar = () => {
             className='w-full h-full md:text-lg pl-12 p-3 md:p-4 md:pl-12 rounded-lg bg-primary placeholder-white/70'
             type='text'
             value={username}
-            onChange={e => setUsername(e.target.value)}
+            onChange={e => setUsername(e.target.value.trim())}
             placeholder='Find a user...'
           />
         </div>

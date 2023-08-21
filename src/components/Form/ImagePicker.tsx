@@ -26,7 +26,7 @@ const ImagePicker = ({ image, setImage }: ImagePickerProps) => {
         setImage(compressedImageFile)
       }
     } catch (error) {
-      toast.error(`Error occured: ${error}`)
+      toast.error('An error occurred while adding an image')
     }
     setIsImageAdding(false)
   }
