@@ -8,7 +8,7 @@ type MessageImageProps = {
 
 const MessageImage = ({ image, ...rest }: MessageImageProps) => {
   return (
-    <Zoom zoomMargin={4}>
+    <Zoom zoomMargin={4} classDialog='custom-zoom'>
       <img
         src={image}
         alt=''
