@@ -9,7 +9,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { TbLogout } from 'react-icons/tb'
 import { HiChatBubbleLeftRight } from 'react-icons/hi2'
 import NavbarListItem from './NavbarListItem'
-import NavbarButton from './NavbarButton'
 
 const animationVariantsUl = {
   open: {
@@ -81,45 +80,49 @@ const NavbarList = () => {
         )}
         {location.pathname === '/profile' ? (
           <NavbarListItem navbarListIsOpen={navbarListIsOpen}>
-            <NavbarButton
-              onClick={() => navigate('/')}
-              icon={<HiChatBubbleLeftRight className='text-3xl' />}
-              text='Back To Chat'
-            />
+            <button
+              className='flex items-center gap-2 p-2 transition-colors hover:text-hover'
+              onClick={() => navigate('/')}>
+              <HiChatBubbleLeftRight className='text-3xl' />
+              Back To Chat
+            </button>
           </NavbarListItem>
         ) : chatsIsOpen ? (
           <NavbarListItem
             styles='md:hidden'
             navbarListIsOpen={navbarListIsOpen}>
-            <NavbarButton
+            <button
+              className='flex items-center gap-2 p-2 transition-colors hover:text-hover'
               onClick={() => {
                 setChatsIsOpen(false)
                 setNavbarListIsOpen(false)
-              }}
-              icon={<HiChatBubbleLeftRight className='text-3xl' />}
-              text='Back To Messages'
-            />
+              }}>
+              <HiChatBubbleLeftRight className='text-3xl' />
+              Back To Messages
+            </button>
           </NavbarListItem>
         ) : (
           <NavbarListItem
             styles='md:hidden'
             navbarListIsOpen={navbarListIsOpen}>
-            <NavbarButton
+            <button
+              className='flex items-center gap-2 p-2 transition-colors hover:text-hover'
               onClick={() => {
                 setChatsIsOpen(true)
                 setNavbarListIsOpen(false)
-              }}
-              icon={<HiChatBubbleLeftRight className='text-3xl' />}
-              text='Chats'
-            />
+              }}>
+              <HiChatBubbleLeftRight className='text-3xl' />
+              Chats
+            </button>
           </NavbarListItem>
         )}
         <NavbarListItem navbarListIsOpen={navbarListIsOpen}>
-          <NavbarButton
-            onClick={() => signOut(auth)}
-            icon={<TbLogout className='text-3xl' />}
-            text='Logout'
-          />
+          <button
+            className='flex items-center gap-2 p-2 transition-colors hover:text-hover'
+            onClick={() => signOut(auth)}>
+            <TbLogout className='text-3xl' />
+            Logout
+          </button>
         </NavbarListItem>
       </motion.ul>
     </div>
