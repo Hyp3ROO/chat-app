@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 import { AuthContext } from './AuthContext'
 
 type User = {
@@ -7,67 +7,48 @@ type User = {
   uid: string
 }
 
-type StateType = {
+type SelectedUserData = {
+  user: User | null
   chatId: string | null
-  user: User
-}
-
-type ReducerAction = {
-  type: string
-  payload: User
 }
 
 type ChatContextType = {
-  state: StateType
-  dispatch: React.Dispatch<ReducerAction>
+  selectedUserData: SelectedUserData
+  chatSelectionHandler: (user: User) => void
   chatsIsOpen: boolean
   setChatsIsOpen: (chatsIsOpen: boolean) => void
 }
 
-type AuthContextType = {
-  currentUser: User | null
-}
-
-const INITIAL_STATE: StateType = {
-  chatId: null,
-  user: {} as User,
-}
-
-export const ChatContext = createContext<ChatContextType>({
-  state: INITIAL_STATE,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  dispatch: () => {},
-  chatsIsOpen: false,
-  setChatsIsOpen: () => false,
-} as ChatContextType)
+export const ChatContext = createContext<ChatContextType | null>(null)
 
 const ChatContextProvider = ({ children }: React.PropsWithChildren) => {
-  const { currentUser } = useContext(AuthContext) as Partial<AuthContextType>
+  const { currentUser } = useContext(AuthContext)
 
-  const chatReducer = (state: StateType, action: ReducerAction): StateType => {
-    switch (action.type) {
-      default:
-        return state
-      case 'CHANGE_USER':
-        return {
-          user: action.payload,
-          chatId: currentUser
-            ? currentUser.uid > action.payload.uid
-              ? currentUser.uid + action.payload.uid
-              : action.payload.uid + currentUser.uid
-            : '',
-        }
+  const chatSelectionHandler = (user: User) => {
+    if (user.uid !== selectedUserData.user?.uid) {
+      const newUserData = {
+        user: user,
+        chatId: currentUser
+          ? currentUser.uid > user.uid
+            ? currentUser.uid + user.uid
+            : user.uid + currentUser.uid
+          : '',
+      }
+      setSelectedUserData(newUserData)
     }
   }
 
-  const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE)
+  const [selectedUserData, setSelectedUserData] = useState<SelectedUserData>({
+    user: null,
+    chatId: null,
+  })
   const [chatsIsOpen, setChatsIsOpen] = useState(false)
 
   return (
     <ChatContext.Provider
       value={{
-        state,
-        dispatch,
+        selectedUserData,
+        chatSelectionHandler,
         chatsIsOpen,
         setChatsIsOpen,
       }}>

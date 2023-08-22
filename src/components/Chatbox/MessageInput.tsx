@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import useChatContext from '../../hooks/useChatContext'
-import useAuthContext from '../../hooks/useAuthContext'
+import useChatContext from '../../context/useChatContext'
+import useAuthContext from '../../context/useAuthContext'
 import {
   Timestamp,
   arrayUnion,
@@ -37,7 +37,7 @@ const MessageInput = ({
   const [text, setText] = useState('')
   const [image, setImage] = useState<File | null>(null)
   const [isImageAdding, setIsImageAdding] = useState(false)
-  const { state } = useChatContext()
+  const { selectedUserData } = useChatContext()
   const { currentUser } = useAuthContext()
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,8 +63,9 @@ const MessageInput = ({
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault()
-    const chatId = state?.chatId || ''
+    const chatId = selectedUserData?.chatId || ''
     const currentUserUID = currentUser?.uid || ''
+    const selectedUserUID = selectedUserData.user?.uid || ''
 
     if (text.trim() === '' && !image) {
       toast.error('You need to type something or select some image!')
@@ -115,7 +116,7 @@ const MessageInput = ({
       [`${chatId}.date`]: serverTimestamp(),
     })
 
-    await updateDoc(doc(db, 'userChats', state.user.uid), {
+    await updateDoc(doc(db, 'userChats', selectedUserUID), {
       [`${chatId}.lastMessage`]: {
         text: text !== '' ? text : 'Sent an Image',
         senderId: currentUser?.uid,

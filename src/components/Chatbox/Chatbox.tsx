@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import useAuthContext from '../../hooks/useAuthContext'
-import useChatContext from '../../hooks/useChatContext'
+import useAuthContext from '../../context/useAuthContext'
+import useChatContext from '../../context/useChatContext'
 import MessageInput from './MessageInput'
 import Messages from './Messages'
 
 const Chatbox = () => {
   const { currentUser } = useAuthContext()
-  const { state, dispatch } = useChatContext()
+  const { selectedUserData, chatSelectionHandler } = useChatContext()
   const messageInputRef = useRef<HTMLInputElement | null>(null)
   const [messageToReply, setMessageToReply] = useState({
     text: '',
@@ -19,29 +19,29 @@ const Chatbox = () => {
   }
 
   useEffect(() => {
-    dispatch({
-      type: 'CHANGE_USER',
-      payload: {
-        displayName: '',
-        photoURL: '',
-        uid: '',
-      },
+    chatSelectionHandler({
+      displayName: '',
+      photoURL: '',
+      uid: '',
     })
-  }, [currentUser, dispatch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser])
 
   return (
     <div className='w-full md:max-h-screen md:w-2/3'>
-      {state.user.uid !== '' ? (
+      {selectedUserData.user?.uid ? (
         <>
           <div className='fixed top-[4.5rem] z-30 flex h-12 w-full items-center justify-center gap-4 bg-primary-bg/80 p-8 md:static md:top-20 md:h-24 md:justify-start'>
-            {state.user.photoURL && (
+            {selectedUserData.user.photoURL && (
               <img
-                src={state.user?.photoURL}
+                src={selectedUserData.user.photoURL}
                 alt=''
                 className='h-7 w-7 rounded-full object-cover md:h-14 md:w-14'
               />
             )}
-            <span className='text-xl font-bold'>{state.user?.displayName}</span>
+            <span className='text-xl font-bold'>
+              {selectedUserData.user.displayName}
+            </span>
           </div>
           <Messages handleReplyClick={handleReplyClick} />
           <MessageInput
