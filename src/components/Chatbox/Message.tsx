@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import useAuthContext from '../../context/useAuthContext'
 import { useMediaQuery } from 'react-responsive'
 import { formatDate } from '../../utils/formatDate'
+import Linkify from 'linkify-react'
 import MessageImage from './MessageImage'
 import MessageReply from './MessageReply'
 import ReplyButton from './ReplyButton'
@@ -55,7 +56,15 @@ const Message = ({ message, handleReplyClick }: MessageProps) => {
                   className={
                     !/\s/.test(message.text) ? 'break-all' : 'break-words'
                   }>
-                  {message.text}
+                  <Linkify
+                    options={{
+                      target: '_blank',
+                      className:
+                        'text-secondary-bg hover:text-hover transition-colors',
+                      truncate: 42,
+                    }}>
+                    {message.text}
+                  </Linkify>
                 </span>
               </div>
               {message.senderId !== currentUser?.uid && (
