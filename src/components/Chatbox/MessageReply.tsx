@@ -1,3 +1,4 @@
+import Linkify from 'linkify-react'
 import type { MessageType } from '../../types/types'
 import MessageImage from './MessageImage'
 
@@ -21,7 +22,14 @@ const MessageReply = ({ message, isCurrentUser }: MessageReplyProps) => {
           className='rounded-lg w-12 my-2 md:w-20'
         />
       ) : (
-        message.messageToReply
+        <Linkify
+          options={{
+            target: '_blank',
+            className: 'text-secondary-bg hover:text-hover transition-colors',
+            truncate: 42,
+          }}>
+          {message.messageToReply}
+        </Linkify>
       )}
     </span>
   )
