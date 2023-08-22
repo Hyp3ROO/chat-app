@@ -1,6 +1,6 @@
 import type { MessageType } from '../../types/types'
 import { useEffect, useRef, useState } from 'react'
-import useAuthContext from '../../hooks/useAuthContext'
+import useAuthContext from '../../context/useAuthContext'
 import { useMediaQuery } from 'react-responsive'
 import { formatDate } from '../../utils/formatDate'
 import MessageImage from './MessageImage'

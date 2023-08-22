@@ -6,7 +6,7 @@ import imageCompression from 'browser-image-compression'
 import { updateProfileInfo } from '../../utils/updateProfileInfo'
 import { AiOutlineCamera } from 'react-icons/ai'
 import FormInput from '../../components/Form/FormInput'
-import useAuthContext from '../../hooks/useAuthContext'
+import useAuthContext from '../../context/useAuthContext'
 
 const ProfileInfo = () => {
   const { currentUser } = useAuthContext()
