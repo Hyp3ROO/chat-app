@@ -67,6 +67,13 @@ const SignIn = () => {
             Sign Up
           </Link>
         </p>
+        <button
+          className='rounded-lg bg-secondary px-6 py-3 font-bold transition-colors hover:bg-hover'
+          onClick={() =>
+            setForm({ email: 'test@test.test', password: 'testtest' })
+          }>
+          Test Account
+        </button>
       </div>
     </div>
   )
