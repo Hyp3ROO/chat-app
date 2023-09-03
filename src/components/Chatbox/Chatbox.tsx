@@ -7,7 +7,7 @@ import Messages from './Messages'
 const Chatbox = () => {
   const { currentUser } = useAuthContext()
   const { selectedUserData, chatSelectionHandler } = useChatContext()
-  const messageInputRef = useRef<HTMLInputElement | null>(null)
+  const messageTextAreaRef = useRef<HTMLTextAreaElement | null>(null)
   const [messageToReply, setMessageToReply] = useState({
     text: '',
     isImage: false,
@@ -15,7 +15,7 @@ const Chatbox = () => {
 
   const handleReplyClick = (text: string, isImage: boolean) => {
     setMessageToReply({ text, isImage })
-    messageInputRef.current?.focus()
+    messageTextAreaRef.current?.focus()
   }
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const Chatbox = () => {
           <MessageInput
             messageToReply={messageToReply}
             setMessageToReply={setMessageToReply}
-            messageInputRef={messageInputRef}
+            messageTextAreaRef={messageTextAreaRef}
           />
         </>
       ) : (

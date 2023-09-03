@@ -26,19 +26,26 @@ type MessageInputProps = {
     text: string
     isImage: boolean
   }) => void
-  messageInputRef: React.MutableRefObject<HTMLInputElement | null>
+  messageTextAreaRef: React.MutableRefObject<HTMLTextAreaElement | null>
 }
 
 const MessageInput = ({
   messageToReply,
   setMessageToReply,
-  messageInputRef,
+  messageTextAreaRef,
 }: MessageInputProps) => {
   const [text, setText] = useState('')
   const [image, setImage] = useState<File | null>(null)
   const [isImageAdding, setIsImageAdding] = useState(false)
   const { selectedUserData } = useChatContext()
   const { currentUser } = useAuthContext()
+
+  const onEnterPress = (e: React.KeyboardEvent) => {
+    if (e.key == 'Enter' && e.shiftKey === false) {
+      e.preventDefault()
+      handleSend(e)
+    }
+  }
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsImageAdding(true)
@@ -66,9 +73,14 @@ const MessageInput = ({
     const chatId = selectedUserData?.chatId || ''
     const currentUserUID = currentUser?.uid || ''
     const selectedUserUID = selectedUserData.user?.uid || ''
+    const messageId = uuid()
 
     if (text.trim() === '' && !image) {
       toast.error('You need to type something or select some image!')
+      return
+    }
+    if (text.trim().length > 200) {
+      toast.error('Max length of message is 200 characters!')
       return
     }
     if (image) {
@@ -84,7 +96,7 @@ const MessageInput = ({
           getDownloadURL(uploadTask.snapshot.ref).then(async downloadURL => {
             await updateDoc(doc(db, 'chats', chatId), {
               messages: arrayUnion({
-                id: uuid(),
+                id: messageId,
                 text,
                 senderId: currentUser?.uid,
                 date: Timestamp.now(),
@@ -99,7 +111,7 @@ const MessageInput = ({
     } else {
       await updateDoc(doc(db, 'chats', chatId), {
         messages: arrayUnion({
-          id: uuid(),
+          id: messageId,
           text,
           senderId: currentUser?.uid,
           date: Timestamp.now(),
@@ -112,6 +124,7 @@ const MessageInput = ({
       [`${chatId}.lastMessage`]: {
         text: text !== '' ? text : 'Sent an Image',
         senderId: currentUser?.uid,
+        messageId,
       },
       [`${chatId}.date`]: serverTimestamp(),
     })
@@ -120,6 +133,7 @@ const MessageInput = ({
       [`${chatId}.lastMessage`]: {
         text: text !== '' ? text : 'Sent an Image',
         senderId: currentUser?.uid,
+        messageId,
       },
       [`${chatId}.date`]: serverTimestamp(),
     })
@@ -154,16 +168,16 @@ const MessageInput = ({
         className='flex items-center self-center w-full px-4'
         onSubmit={handleSend}>
         <div className='relative w-full'>
-          <input
+          <textarea
             className={`${
               isImageAdding ? 'placeholder-gray-400' : 'placeholder-white/70'
-            } w-full text-sm p-3.5 bg-primary md:text-lg rounded-lg`}
-            type='text'
+            } flex items-center w-full h-12 md:h-14 text-sm p-3.5 bg-primary md:text-lg rounded-lg pr-12 resize-none scrollbar-thin scrollbar-track-primary-bg scrollbar-thumb-secondary-bg`}
             disabled={isImageAdding ? true : false}
             value={text}
             onChange={e => setText(e.target.value)}
+            onKeyDown={onEnterPress}
             placeholder={isImageAdding ? 'Adding Image...' : 'Type Message...'}
-            ref={messageInputRef}
+            ref={messageTextAreaRef}
           />
           <div className='absolute inset-y-0 right-0 flex items-center pl-3'>
             <ImagePicker
