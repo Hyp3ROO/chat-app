@@ -1,11 +1,10 @@
-import type { Timestamp } from 'firebase/firestore'
-
 export type MessageType = {
   id: string
   text: string
   image: string
-  date: Timestamp
+  date: number
   senderId: string
   messageToReply: string
   isReplyImage: boolean
+  isDeleted?: boolean
 }

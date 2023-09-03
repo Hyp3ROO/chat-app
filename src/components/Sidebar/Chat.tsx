@@ -13,6 +13,7 @@ type ChatProps = {
   lastMessage?: string
   senderId?: string
   user: User
+  isDeleted?: boolean
 }
 
 const Chat = ({
@@ -21,6 +22,7 @@ const Chat = ({
   lastMessage,
   senderId,
   user,
+  isDeleted,
 }: ChatProps) => {
   const { currentUser } = useAuthContext()
   const { chatSelectionHandler, setChatsIsOpen } = useChatContext()
@@ -45,9 +47,9 @@ const Chat = ({
             <span className='break-all font-bold md:text-lg'>
               {displayName}
             </span>
-            <span className='truncate'>{`${
+            <span className={`${isDeleted && 'text-gray-500'} truncate`}>{`${
               senderId === currentUser?.uid ? 'You:' : ''
-            } ${lastMessage ? lastMessage : ''}`}</span>
+            } ${lastMessage}`}</span>
           </div>
         </>
       )}
