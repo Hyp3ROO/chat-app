@@ -7,6 +7,7 @@ import Linkify from 'linkify-react'
 import MessageImage from './MessageImage'
 import MessageReply from './MessageReply'
 import ReplyButton from './ReplyButton'
+import DeleteMessageButton from './DeleteMessageButton'
 
 type MessageProps = {
   message: MessageType
@@ -15,7 +16,7 @@ type MessageProps = {
 
 const Message = ({ message, handleReplyClick }: MessageProps) => {
   const { currentUser } = useAuthContext()
-  const [showReplyButton, setShowReplyButton] = useState(false)
+  const [showMessageOptions, setShowMessageOptions] = useState(false)
   const isCurrentUser = message.senderId === currentUser?.uid
   const scrollToRef = useRef<HTMLDivElement | null>(null)
   const isMobile = useMediaQuery({ maxWidth: 767 })
@@ -31,8 +32,8 @@ const Message = ({ message, handleReplyClick }: MessageProps) => {
         isCurrentUser ? 'flex-row-reverse' : 'flex-row'
       }`}
       ref={scrollToRef}
-      onMouseEnter={() => setShowReplyButton(true)}
-      onMouseLeave={() => setShowReplyButton(false)}>
+      onMouseEnter={() => setShowMessageOptions(true)}
+      onMouseLeave={() => setShowMessageOptions(false)}>
       <div
         className={`${
           isCurrentUser ? 'items-end' : 'items-start'
@@ -45,17 +46,19 @@ const Message = ({ message, handleReplyClick }: MessageProps) => {
             {message?.messageToReply && (
               <MessageReply message={message} isCurrentUser={isCurrentUser} />
             )}
-            <div className='flex items-center gap-1'>
+            <div
+              className={`flex items-center gap-2 ${
+                message.senderId === currentUser?.uid ? 'flex-row-reverse' : ''
+              }`}>
               <div
-                className={`flex w-fit items-center gap-4 rounded-xl p-3 text-justify text-sm md:p-4 md:text-base z-10 ${
-                  isCurrentUser
+                className={`${
+                  message.isDeleted
+                    ? 'bg-gray-500'
+                    : isCurrentUser
                     ? 'rounded-br-none bg-secondary'
                     : 'rounded-bl-none bg-white text-black'
-                }`}>
-                <span
-                  className={
-                    !/\s/.test(message.text) ? 'break-all' : 'break-words'
-                  }>
+                } flex w-fit items-center gap-4 rounded-xl p-3 text-justify text-sm md:p-4 md:text-base z-10`}>
+                <span className='break-all'>
                   <Linkify
                     options={{
                       target: '_blank',
@@ -67,14 +70,20 @@ const Message = ({ message, handleReplyClick }: MessageProps) => {
                   </Linkify>
                 </span>
               </div>
-              {message.senderId !== currentUser?.uid && (
-                <ReplyButton
-                  showReplyButton={showReplyButton}
-                  replyTo={message.text}
-                  handleReplyClick={handleReplyClick}
-                  isImage={false}
-                />
-              )}
+              {!message.isDeleted &&
+                (message.senderId !== currentUser?.uid ? (
+                  <ReplyButton
+                    showMessageOptions={showMessageOptions}
+                    replyTo={message.text}
+                    handleReplyClick={handleReplyClick}
+                    isImage={false}
+                  />
+                ) : (
+                  <DeleteMessageButton
+                    showMessageOptions={showMessageOptions}
+                    message={message}
+                  />
+                ))}
             </div>
           </div>
         )}
@@ -86,20 +95,30 @@ const Message = ({ message, handleReplyClick }: MessageProps) => {
             {message?.messageToReply && (
               <MessageReply message={message} isCurrentUser={isCurrentUser} />
             )}
-            <div className='flex items-center gap-1'>
+            <div
+              className={`flex items-center gap-2 ${
+                isCurrentUser ? 'flex-row-reverse' : 'flex-row'
+              }`}>
               <MessageImage
                 image={message.image}
                 width={isMobile ? 100 : 200}
                 height={isMobile ? 100 : 200}
               />
-              {message.senderId !== currentUser?.uid && (
-                <ReplyButton
-                  showReplyButton={showReplyButton}
-                  replyTo={message.image}
-                  handleReplyClick={handleReplyClick}
-                  isImage={true}
-                />
-              )}
+              {!message.isDeleted &&
+                !message.text &&
+                (message.senderId !== currentUser?.uid ? (
+                  <ReplyButton
+                    showMessageOptions={showMessageOptions}
+                    replyTo={message.image}
+                    handleReplyClick={handleReplyClick}
+                    isImage={true}
+                  />
+                ) : (
+                  <DeleteMessageButton
+                    showMessageOptions={showMessageOptions}
+                    message={message}
+                  />
+                ))}
             </div>
           </div>
         )}
