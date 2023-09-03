@@ -17,7 +17,14 @@ const Messages = ({ handleReplyClick }: MessagesProps) => {
     const chatId = selectedUserData?.chatId || ''
     if (chatId) {
       const unsubscribe = onSnapshot(doc(db, 'chats', chatId), doc => {
-        doc.exists() && setMessages(doc.data().messages as MessageType[])
+        doc.exists() &&
+          setMessages(
+            doc
+              .data()
+              .messages.sort(
+                (a: { date: number }, b: { date: number }) => a.date - b.date
+              ) as MessageType[]
+          )
       })
 
       return () => {
