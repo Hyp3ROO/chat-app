@@ -5,10 +5,15 @@
 .custom-zoom [data-rmiz-modal-overlay='hidden'] {
   @apply bg-primary-bg/0;
 }
+
 .custom-zoom [data-rmiz-modal-overlay='visible'] {
   @apply bg-primary-bg/100;
 }
 
 .custom-zoom [data-rmiz-btn-unzoom] {
   @apply bg-primary;
+}
+
+.message-options-btn {
+  @apply p-0.5 font-bold transition-opacity md:p-1 focus:opacity-100;
 }
