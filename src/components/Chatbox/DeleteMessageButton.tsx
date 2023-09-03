@@ -96,7 +96,7 @@ const DeleteMessageButton = ({
       {showModal && (
         <>
           <div
-            className='fixed top-1/2 left-1/2 md:left-2/3 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 md:gap-4 p-3 rounded-lg bg-primary-bg text-sm text-center md:text-lg md:p-5 z-50'
+            className='fixed top-1/2 left-1/2 md:left-2/3 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 md:gap-4 p-5 rounded-lg bg-primary-bg text-center md:text-lg lg:text-xl md:p-7 z-50'
             ref={modalRef}>
             <p>Are you sure you want to delete this message?</p>
             <div className='flex items-center gap-4 md:gap-6'>
