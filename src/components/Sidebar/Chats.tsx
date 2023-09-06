@@ -17,7 +17,7 @@ type Chats = {
   lastMessage?: {
     text: string
     senderId: string
-    isDeleted?: boolean
+    action?: 'deleted' | 'edited'
   }
 }
 
@@ -37,7 +37,7 @@ const Chats = () => {
             lastMessage={chat[1].lastMessage?.text}
             senderId={chat[1].lastMessage?.senderId}
             user={chat[1].userInfo}
-            isDeleted={chat[1].lastMessage?.isDeleted}
+            action={chat[1].lastMessage?.action}
           />
         </li>
       )

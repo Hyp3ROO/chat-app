@@ -9,5 +9,5 @@ export type MessageType = {
   senderId: string
   messageToReply: string
   isReplyImage: boolean
-  isDeleted?: boolean
+  action?: 'deleted' | 'edited'
 }
