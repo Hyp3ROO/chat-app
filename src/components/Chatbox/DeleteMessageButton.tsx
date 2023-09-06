@@ -1,19 +1,10 @@
-import { AiFillDelete } from 'react-icons/ai'
-import { MessageType } from '../../types/types'
+import type { MessageType } from '../../types/types'
+import { useRef, useState } from 'react'
 import useChatContext from '../../context/useChatContext'
-import {
-  arrayRemove,
-  arrayUnion,
-  collection,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-} from 'firebase/firestore'
-import { db } from '../../firebase/config'
 import useAuthContext from '../../context/useAuthContext'
 import toast from 'react-hot-toast'
-import { useRef, useState } from 'react'
+import { updateMessageInfo } from '../../utils/updateMessageInfo'
+import { AiFillDelete } from 'react-icons/ai'
 
 type DeleteMessageButtonProps = {
   showMessageOptions: boolean
@@ -29,53 +20,18 @@ const DeleteMessageButton = ({
   const { selectedUserData } = useChatContext()
   const { currentUser } = useAuthContext()
 
-  const handleDeleteMessage = async () => {
+  const messageInfoData = {
+    currentUserUID: currentUser?.uid || '',
+    selectedUserUID: selectedUserData.user?.uid || '',
+    chatId: selectedUserData?.chatId || '',
+    message,
+    newText: 'Message was deleted',
+    action: 'deleted' as 'deleted',
+  }
+
+  const handleDeleteMessage = () => {
     try {
-      const chatId = selectedUserData?.chatId || ''
-      const currentUserUID = currentUser?.uid || ''
-      const selectedUserUID = selectedUserData.user?.uid || ''
-
-      await updateDoc(doc(db, 'chats', chatId), {
-        messages: arrayRemove({
-          ...message,
-        }),
-      })
-      await updateDoc(doc(db, 'chats', chatId), {
-        messages: arrayUnion({
-          ...message,
-          text: 'Message was deleted',
-          image: null,
-          isDeleted: true,
-        }),
-      })
-
-      const q = query(collection(db, 'userChats'))
-      const querySnapshot = await getDocs(q)
-      if (!querySnapshot.empty) {
-        querySnapshot.forEach(document => {
-          const documentArr = Object.entries(document.data())
-          documentArr.forEach(async arr => {
-            if (
-              arr[0] === chatId &&
-              arr[1].lastMessage.messageId == message.id
-            ) {
-              await updateDoc(doc(db, 'userChats', currentUserUID), {
-                [`${chatId}.lastMessage`]: {
-                  text: 'Message was deleted',
-                  isDeleted: true,
-                },
-              })
-              await updateDoc(doc(db, 'userChats', selectedUserUID), {
-                [`${chatId}.lastMessage`]: {
-                  text: 'Message was deleted',
-                  isDeleted: true,
-                },
-              })
-            }
-          })
-        })
-      }
-
+      updateMessageInfo(messageInfoData)
       toast.success('Message successfully deleted')
       setShowModal(false)
     } catch (error) {
