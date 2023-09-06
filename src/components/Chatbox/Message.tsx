@@ -1,25 +1,65 @@
 import type { MessageType } from '../../types/types'
 import { useEffect, useRef, useState } from 'react'
 import useAuthContext from '../../context/useAuthContext'
+import useChatContext from '../../context/useChatContext'
 import { useMediaQuery } from 'react-responsive'
+import toast from 'react-hot-toast'
 import { formatDate } from '../../utils/formatDate'
+import { updateMessageInfo } from '../../utils/updateMessageInfo'
 import Linkify from 'linkify-react'
 import MessageImage from './MessageImage'
 import MessageReply from './MessageReply'
 import ReplyButton from './ReplyButton'
 import DeleteMessageButton from './DeleteMessageButton'
+import EditMessageButton from './EditMessageButton'
 
 type MessageProps = {
   message: MessageType
   handleReplyClick: (text: string, isImage: boolean) => void
+  editingMessageId: string
+  setEditingMessageId: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Message = ({ message, handleReplyClick }: MessageProps) => {
+const Message = ({
+  message,
+  handleReplyClick,
+  editingMessageId,
+  setEditingMessageId,
+}: MessageProps) => {
   const { currentUser } = useAuthContext()
+  const { selectedUserData } = useChatContext()
   const [showMessageOptions, setShowMessageOptions] = useState(false)
+  const [editedText, setEditedText] = useState(message.text)
   const isCurrentUser = message.senderId === currentUser?.uid
   const scrollToRef = useRef<HTMLDivElement | null>(null)
   const isMobile = useMediaQuery({ maxWidth: 767 })
+
+  const messageInfoData = {
+    currentUserUID: currentUser?.uid || '',
+    selectedUserUID: selectedUserData.user?.uid || '',
+    chatId: selectedUserData?.chatId || '',
+    message,
+    newText: editedText,
+    action: 'edited' as 'edited',
+  }
+
+  const handleEdit = () => {
+    try {
+      updateMessageInfo(messageInfoData)
+      toast.success('Message successfully edited')
+      setEditingMessageId('')
+    } catch (error) {
+      toast.error('Something went wrong')
+      setEditingMessageId('')
+    }
+  }
+
+  const onEnterPress = (e: React.KeyboardEvent) => {
+    if (e.key == 'Enter' && e.shiftKey === false) {
+      e.preventDefault()
+      handleEdit()
+    }
+  }
 
   useEffect(
     () => scrollToRef.current?.scrollIntoView({ behavior: 'smooth' }),
@@ -52,7 +92,7 @@ const Message = ({ message, handleReplyClick }: MessageProps) => {
               }`}>
               <div
                 className={`${
-                  message.isDeleted
+                  message.action === 'deleted'
                     ? 'bg-gray-500'
                     : isCurrentUser
                     ? 'rounded-br-none bg-secondary'
@@ -66,11 +106,22 @@ const Message = ({ message, handleReplyClick }: MessageProps) => {
                         'text-secondary-bg hover:text-hover transition-colors',
                       truncate: 42,
                     }}>
-                    {message.text}
+                    {editingMessageId === message.id ? (
+                      <textarea
+                        className='flex items-center w-full h-12 md:h-14 text-sm p-3.5 bg-primary md:text-lg rounded-lg resize-none scrollbar-thin scrollbar-track-primary-bg scrollbar-thumb-secondary-bg'
+                        value={editedText}
+                        onChange={e => setEditedText(e.target.value)}
+                        onKeyDown={onEnterPress}
+                        autoFocus
+                        onFocus={e => e.target.select()}
+                      />
+                    ) : (
+                      message.text
+                    )}
                   </Linkify>
                 </span>
               </div>
-              {!message.isDeleted &&
+              {message.action !== 'deleted' &&
                 (message.senderId !== currentUser?.uid ? (
                   <ReplyButton
                     showMessageOptions={showMessageOptions}
@@ -79,10 +130,19 @@ const Message = ({ message, handleReplyClick }: MessageProps) => {
                     isImage={false}
                   />
                 ) : (
-                  <DeleteMessageButton
-                    showMessageOptions={showMessageOptions}
-                    message={message}
-                  />
+                  <>
+                    <DeleteMessageButton
+                      showMessageOptions={showMessageOptions}
+                      message={message}
+                    />
+                    <EditMessageButton
+                      showMessageOptions={showMessageOptions}
+                      messageId={message.id}
+                      messageText={message.text}
+                      setEditedText={setEditedText}
+                      setEditingMessageId={setEditingMessageId}
+                    />
+                  </>
                 ))}
             </div>
           </div>
@@ -104,7 +164,7 @@ const Message = ({ message, handleReplyClick }: MessageProps) => {
                 width={isMobile ? 100 : 200}
                 height={isMobile ? 100 : 200}
               />
-              {!message.isDeleted &&
+              {message.action !== 'deleted' &&
                 !message.text &&
                 (message.senderId !== currentUser?.uid ? (
                   <ReplyButton
@@ -125,6 +185,7 @@ const Message = ({ message, handleReplyClick }: MessageProps) => {
         {message.date.seconds && (
           <span className='absolute -bottom-5 text-[.6rem] md:text-xs'>
             {formatDate(new Date(message.date.seconds * 1000))}
+            {message.action === 'edited' && ' (edited)'}
           </span>
         )}
       </div>

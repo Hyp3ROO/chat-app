@@ -11,6 +11,7 @@ type MessagesProps = {
 
 const Messages = ({ handleReplyClick }: MessagesProps) => {
   const [messages, setMessages] = useState<MessageType[]>([])
+  const [editingMessageId, setEditingMessageId] = useState('')
   const { selectedUserData } = useChatContext()
 
   useEffect(() => {
@@ -39,6 +40,8 @@ const Messages = ({ handleReplyClick }: MessagesProps) => {
         <Message
           key={message.id}
           message={message}
+          editingMessageId={editingMessageId}
+          setEditingMessageId={setEditingMessageId}
           handleReplyClick={handleReplyClick}
         />
       ))}
