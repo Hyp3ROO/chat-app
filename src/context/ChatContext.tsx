@@ -35,13 +35,18 @@ const ChatContextProvider = ({ children }: React.PropsWithChildren) => {
           : '',
       }
       setSelectedUserData(newUserData)
+      localStorage.selectedUserData = JSON.stringify(newUserData)
     }
   }
 
-  const [selectedUserData, setSelectedUserData] = useState<SelectedUserData>({
-    user: null,
-    chatId: null,
-  })
+  const localStorageSelectedUserData: SelectedUserData =
+    localStorage.selectedUserData
+      ? JSON.parse(localStorage.selectedUserData)
+      : { user: null, chatId: null }
+
+  const [selectedUserData, setSelectedUserData] = useState<SelectedUserData>(
+    localStorageSelectedUserData
+  )
   const [chatsIsOpen, setChatsIsOpen] = useState(false)
 
   return (

@@ -29,9 +29,14 @@ const NavbarList = () => {
   const [navbarListIsOpen, setNavbarListIsOpen] = useState(false)
   const navbarListRef = useRef<HTMLDivElement | null>(null)
   const { currentUser } = useAuthContext()
-  const { chatsIsOpen, setChatsIsOpen } = useChatContext()
+  const { chatsIsOpen, setChatsIsOpen, chatSelectionHandler } = useChatContext()
   const location = useLocation()
   const navigate = useNavigate()
+
+  const signOutHandler = () => {
+    signOut(auth)
+    chatSelectionHandler({ displayName: '', photoURL: '', uid: '' })
+  }
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -119,7 +124,7 @@ const NavbarList = () => {
         <NavbarListItem navbarListIsOpen={navbarListIsOpen}>
           <button
             className='flex items-center gap-2 p-2 transition-colors hover:text-hover'
-            onClick={() => signOut(auth)}>
+            onClick={signOutHandler}>
             <TbLogout className='text-3xl' />
             Logout
           </button>

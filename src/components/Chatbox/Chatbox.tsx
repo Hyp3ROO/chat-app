@@ -19,12 +19,11 @@ const Chatbox = () => {
   }
 
   useEffect(() => {
-    chatSelectionHandler({
-      displayName: '',
-      photoURL: '',
-      uid: '',
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    chatSelectionHandler(
+      selectedUserData.user
+        ? selectedUserData.user
+        : { displayName: '', photoURL: '', uid: '' }
+    )
   }, [currentUser])
 
   return (
