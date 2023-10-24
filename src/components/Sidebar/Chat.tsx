@@ -35,7 +35,8 @@ const Chat = ({
   return (
     <button
       className='flex w-full cursor-pointer items-center text-left gap-6 px-8 py-4 transition-colors duration-300 hover:bg-primary/80'
-      onClick={() => handleSelect(user)}>
+      onClick={() => handleSelect(user)}
+      aria-label={`select user: ${user.displayName}`}>
       {photoURL && (
         <>
           <img
@@ -49,7 +50,7 @@ const Chat = ({
             </span>
             <span
               className={`${
-                action === 'deleted' ? 'text-gray-500' : ''
+                action === 'deleted' ? 'text-gray-400' : ''
               } truncate`}>{`${senderId === currentUser?.uid ? 'You:' : ''} ${
               lastMessage || ''
             }`}</span>

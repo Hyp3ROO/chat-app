@@ -46,7 +46,8 @@ const DeleteMessageButton = ({
         className={`${
           showMessageOptions ? 'opacity-100' : 'opacity-0'
         } message-options-btn group`}
-        onClick={() => setShowModal(true)}>
+        onClick={() => setShowModal(true)}
+        aria-label='delete message'>
         <AiFillDelete className='text-xl md:text-2xl group-hover:text-hover transition-colors' />
       </button>
       {showModal && (

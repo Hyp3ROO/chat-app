@@ -18,7 +18,8 @@ const ReplyButton = ({
       className={`${
         showMessageOptions ? 'opacity-100' : 'opacity-0'
       } message-options-btn group`}
-      onClick={() => handleReplyClick(replyTo, isImage)}>
+      onClick={() => handleReplyClick(replyTo, isImage)}
+      aria-label='reply'>
       <BsFillReplyFill className='text-xl md:text-2xl group-hover:text-hover transition-colors' />
     </button>
   )
