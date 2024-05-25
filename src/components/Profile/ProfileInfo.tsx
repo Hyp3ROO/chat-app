@@ -7,6 +7,7 @@ import { updateProfileInfo } from '../../utils/updateProfileInfo'
 import { AiOutlineCamera } from 'react-icons/ai'
 import FormInput from '../../components/Form/FormInput'
 import useAuthContext from '../../context/useAuthContext'
+import AccountDeletingButton from './AccountDeletingButton'
 
 const ProfileInfo = () => {
   const { currentUser } = useAuthContext()
@@ -47,7 +48,6 @@ const ProfileInfo = () => {
   const handleChangeImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setImageChanged(false)
     const currentUserDisplayName = currentUser?.displayName || ''
-
     const imageFile = e.target.files?.[0]
     if (!imageFile) return
     const options = {
@@ -56,46 +56,32 @@ const ProfileInfo = () => {
       useWebWorker: true,
       fileType: 'image/webp',
     }
-
     const toastLoading = toast.loading('Changing avatar image...')
-
+    const compressedImageFile = await imageCompression(imageFile, options)
     try {
-      if (imageFile) {
-        const compressedImageFile = await imageCompression(imageFile, options)
-        try {
-          const storageRef = ref(storage, currentUserDisplayName)
-          const uploadTask = uploadBytesResumable(
-            storageRef,
-            compressedImageFile
-          )
-          uploadTask.on(
-            'state_changed',
-            null,
-            () => {
-              toast.error('An error occurred while changing an image')
-            },
-            () => {
-              getDownloadURL(uploadTask.snapshot.ref).then(
-                async downloadURL => {
-                  await updateProfileInfo(
-                    currentUser,
-                    'userInfo.photoURL',
-                    'photoURL',
-                    downloadURL
-                  )
-
-                  toast.success('Avatar image changed')
-                  toast.dismiss(toastLoading)
-                  setImageChanged(true)
-                }
-              )
-            }
-          )
-        } catch (error) {
+      const storageRef = ref(storage, currentUserDisplayName)
+      const uploadTask = uploadBytesResumable(storageRef, compressedImageFile)
+      uploadTask.on(
+        'state_changed',
+        null,
+        () => {
           toast.error('An error occurred while changing an image')
-          toast.dismiss(toastLoading)
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async downloadURL => {
+            await updateProfileInfo(
+              currentUser,
+              'userInfo.photoURL',
+              'photoURL',
+              downloadURL
+            )
+
+            toast.success('Avatar image changed')
+            toast.dismiss(toastLoading)
+            setImageChanged(true)
+          })
         }
-      }
+      )
     } catch (error) {
       toast.error('An error occurred while changing an image')
       toast.dismiss(toastLoading)
@@ -150,6 +136,7 @@ const ProfileInfo = () => {
               Change
             </button>
           </form>
+          <AccountDeletingButton />
         </div>
       </div>
     </div>
